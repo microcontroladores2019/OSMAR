@@ -68,70 +68,70 @@
 */
 
 /*
-FreeRTOS is a market leading RTOS from Real Time Engineers Ltd. that supports
-31 architectures and receives 77500 downloads a year. It is professionally
-developed, strictly quality controlled, robust, supported, and free to use in
-commercial products without any requirement to expose your proprietary source
-code.
+	FreeRTOS is a market leading RTOS from Real Time Engineers Ltd. that supports
+	31 architectures and receives 77500 downloads a year. It is professionally
+	developed, strictly quality controlled, robust, supported, and free to use in
+	commercial products without any requirement to expose your proprietary source
+	code.
 
-This simple FreeRTOS demo does not make use of any IO ports, so will execute on
-any Cortex-M3 of Cortex-M4 hardware.  Look for TODO markers in the code for
-locations that may require tailoring to, for example, include a manufacturer
-specific header file.
+	This simple FreeRTOS demo does not make use of any IO ports, so will execute on
+	any Cortex-M3 of Cortex-M4 hardware.  Look for TODO markers in the code for
+	locations that may require tailoring to, for example, include a manufacturer
+	specific header file.
 
-This is a starter project, so only a subset of the RTOS features are
-demonstrated.  Ample source comments are provided, along with web links to
-relevant pages on the http://www.FreeRTOS.org site.
+	This is a starter project, so only a subset of the RTOS features are
+	demonstrated.  Ample source comments are provided, along with web links to
+	relevant pages on the http://www.FreeRTOS.org site.
 
-Here is a description of the project's functionality:
+	Here is a description of the project's functionality:
 
-The main() Function:
-main() creates the tasks and software timers described in this section, before
-starting the scheduler.
+	The main() Function:
+	main() creates the tasks and software timers described in this section, before
+	starting the scheduler.
 
-The Queue Send Task:
-The queue send task is implemented by the prvQueueSendTask() function.
-The task uses the FreeRTOS vTaskDelayUntil() and xQueueSend() API functions to
-periodically send the number 100 on a queue.  The period is set to 200ms.  See
-the comments in the function for more details.
-http://www.freertos.org/vtaskdelayuntil.html
-http://www.freertos.org/a00117.html
+	The Queue Send Task:
+	The queue send task is implemented by the prvQueueSendTask() function.
+	The task uses the FreeRTOS vTaskDelayUntil() and xQueueSend() API functions to
+	periodically send the number 100 on a queue.  The period is set to 200ms.  See
+	the comments in the function for more details.
+	http://www.freertos.org/vtaskdelayuntil.html
+	http://www.freertos.org/a00117.html
 
-The Queue Receive Task:
-The queue receive task is implemented by the prvQueueReceiveTask() function.
-The task uses the FreeRTOS xQueueReceive() API function to receive values from
-a queue.  The values received are those sent by the queue send task.  The queue
-receive task increments the ulCountOfItemsReceivedOnQueue variable each time it
-receives the value 100.  Therefore, as values are sent to the queue every 200ms,
-the value of ulCountOfItemsReceivedOnQueue will increase by 5 every second.
-http://www.freertos.org/a00118.html
+	The Queue Receive Task:
+	The queue receive task is implemented by the prvQueueReceiveTask() function.
+	The task uses the FreeRTOS xQueueReceive() API function to receive values from
+	a queue.  The values received are those sent by the queue send task.  The queue
+	receive task increments the ulCountOfItemsReceivedOnQueue variable each time it
+	receives the value 100.  Therefore, as values are sent to the queue every 200ms,
+	the value of ulCountOfItemsReceivedOnQueue will increase by 5 every second.
+	http://www.freertos.org/a00118.html
 
-An example software timer:
-A software timer is created with an auto reloading period of 1000ms.  The
-timer's callback function increments the ulCountOfTimerCallbackExecutions
-variable each time it is called.  Therefore the value of
-ulCountOfTimerCallbackExecutions will count seconds.
-http://www.freertos.org/RTOS-software-timer.html
+	An example software timer:
+	A software timer is created with an auto reloading period of 1000ms.  The
+	timer's callback function increments the ulCountOfTimerCallbackExecutions
+	variable each time it is called.  Therefore the value of
+	ulCountOfTimerCallbackExecutions will count seconds.
+	http://www.freertos.org/RTOS-software-timer.html
 
-The FreeRTOS RTOS tick hook (or callback) function:
-The tick hook function executes in the context of the FreeRTOS tick interrupt.
-The function 'gives' a semaphore every 500th time it executes.  The semaphore
-is used to synchronise with the event semaphore task, which is described next.
+	The FreeRTOS RTOS tick hook (or callback) function:
+	The tick hook function executes in the context of the FreeRTOS tick interrupt.
+	The function 'gives' a semaphore every 500th time it executes.  The semaphore
+	is used to synchronise with the event semaphore task, which is described next.
 
-The event semaphore task:
-The event semaphore task uses the FreeRTOS xSemaphoreTake() API function to
-wait for the semaphore that is given by the RTOS tick hook function.  The task
-increments the ulCountOfReceivedSemaphores variable each time the semaphore is
-received.  As the semaphore is given every 500ms (assuming a tick frequency of
-1KHz), the value of ulCountOfReceivedSemaphores will increase by 2 each second.
+	The event semaphore task:
+	The event semaphore task uses the FreeRTOS xSemaphoreTake() API function to
+	wait for the semaphore that is given by the RTOS tick hook function.  The task
+	increments the ulCountOfReceivedSemaphores variable each time the semaphore is
+	received.  As the semaphore is given every 500ms (assuming a tick frequency of
+	1KHz), the value of ulCountOfReceivedSemaphores will increase by 2 each second.
 
-The idle hook (or callback) function:
-The idle hook function queries the amount of free FreeRTOS heap space available.
-See vApplicationIdleHook().
+	The idle hook (or callback) function:
+	The idle hook function queries the amount of free FreeRTOS heap space available.
+	See vApplicationIdleHook().
 
-The malloc failed and stack overflow hook (or callback) functions:
-These two hook functions are provided as examples, but do not contain any
-functionality.
+	The malloc failed and stack overflow hook (or callback) functions:
+	These two hook functions are provided as examples, but do not contain any
+	functionality.
 */
 
 /* Standard includes. */
@@ -171,44 +171,27 @@ the queue empty. */
  * TODO: Implement this function for any hardware specific clock configuration
  * that was not already performed before main() was called.
  */
-static void prvSetupHardware( void );
+static void initializeProgram( void );
 
-/*
- * The queue send and receive tasks as described in the comments at the top of
- * this file.
- */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
 
-/*
- * The callback function assigned to the example software timer as described at
- * the top of this file.
- */
-static void vExampleTimerCallback( xTimerHandle xTimer );
+static void taskCheckModule1( void *pvParameters );
+static void taskCheckModule2( void *pvParameters );
+static void taskCheckModule3( void *pvParameters );
+static void taskCheckDistances( void *pvParameters );
+static void processDistance( uint32_t distance, int sensor);
 
-/*
- * The event semaphore task as described at the top of this file.
- */
-static void prvEventSemaphoreTask( void *pvParameters );
 
-/*-----------------------------------------------------------*/
+static xQueueHandle queueSensor1 = NULL;
+static xQueueHandle queueSensor2 = NULL;
+static xQueueHandle queueSensor3 = NULL;
 
-/* The queue used by the queue send and queue receive tasks. */
-static xQueueHandle xQueue = NULL;
 
-/* The semaphore (in this case binary) that is used by the FreeRTOS tick hook
- * function and the event semaphore task.
- */
-static xSemaphoreHandle xEventSemaphore = NULL;
+static xSemaphoreHandle sensorMutex = NULL;
+static xSemaphoreHandle sensor1semaph = NULL;
+static xSemaphoreHandle sensor2semaph = NULL;
+static xSemaphoreHandle sensor3semaph = NULL;
 
-/* The counters used by the various examples.  The usage is described in the
- * comments at the top of this file.
- */
-static volatile uint32_t ulCountOfTimerCallbackExecutions = 0;
-static volatile uint32_t ulCountOfItemsReceivedOnQueue = 0;
-static volatile uint32_t ulCountOfReceivedSemaphores = 0;
 
-/*-----------------------------------------------------------*/
 
 int main(void)
 {
@@ -216,68 +199,87 @@ xTimerHandle xExampleSoftwareTimer = NULL;
 
 	/* Configure the system ready to run the demo.  The clock configuration
 	can be done here if it was not done before main() was called. */
-	prvSetupHardware();
+	initializeProgram();
 
 
 	/* Create the queue used by the queue send and queue receive tasks.
 	http://www.freertos.org/a00116.html */
-	xQueue = xQueueCreate( 	mainQUEUE_LENGTH,		/* The number of items the queue can hold. */
+	queueSensor1 = xQueueCreate( 	mainQUEUE_LENGTH,		/* The number of items the queue can hold. */
 							sizeof( uint32_t ) );	/* The size of each item the queue holds. */
+	queueSensor2 = xQueueCreate( 	mainQUEUE_LENGTH,		/* The number of items the queue can hold. */
+							sizeof( uint32_t ) );
+	queueSensor3 = xQueueCreate( 	mainQUEUE_LENGTH,		/* The number of items the queue can hold. */
+							sizeof( uint32_t ) );						
 	/* Add to the registry, for the benefit of kernel aware debugging. */
-	vQueueAddToRegistry( xQueue, "MainQueue" );
+	vQueueAddToRegistry( queueSensor1, "queueSensor1" );
+	vQueueAddToRegistry( queueSensor2, "queueSensor2" );
+	vQueueAddToRegistry( queueSensor3, "queueSensor3" );
 
 
 	/* Create the semaphore used by the FreeRTOS tick hook function and the
 	event semaphore task. */
-	vSemaphoreCreateBinary( xEventSemaphore );
+	vSemaphoreCreateBinary( sensorMutex );
+	vSemaphoreCreateBinary( sensor1semaph );
+	vSemaphoreCreateBinary( sensor2semaph );
+	vSemaphoreCreateBinary( sensor3semaph );
 	/* Add to the registry, for the benefit of kernel aware debugging. */
-	vQueueAddToRegistry( xEventSemaphore, "xEventSemaphore" );
+	vQueueAddToRegistry( sensorMutex, "sensorMutex" );
+	vQueueAddToRegistry( sensor1semaph, "sensor1semaph" );
+	vQueueAddToRegistry( sensor2semaph, "sensor2semaph" );
+	vQueueAddToRegistry( sensor3semaph, "sensor3semaph" );
 
 
-	/* Create the queue receive task as described in the comments at the top
-	of this	file.  http://www.freertos.org/a00125.html */
-	xTaskCreate( 	prvQueueReceiveTask,			/* The function that implements the task. */
-					"Rx", 		/* Text name for the task, just to help debugging. */
-					configMINIMAL_STACK_SIZE, 		/* The size (in words) of the stack that should be created for the task. */
-					NULL, 							/* A parameter that can be passed into the task.  Not used in this simple demo. */
-					mainQUEUE_RECEIVE_TASK_PRIORITY,/* The priority to assign to the task.  tskIDLE_PRIORITY (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1 is the highest priority. */
-					NULL );							/* Used to obtain a handle to the created task.  Not used in this simple demo, so set to NULL. */
+	// /* Create the queue receive task as described in the comments at the top
+	// of this	file.  http://www.freertos.org/a00125.html */
+	// xTaskCreate( 	prvQueueReceiveTask,			/* The function that implements the task. */
+	// 				"Rx", 		/* Text name for the task, just to help debugging. */
+	// 				configMINIMAL_STACK_SIZE, 		/* The size (in words) of the stack that should be created for the task. */
+	// 				NULL, 							/* A parameter that can be passed into the task.  Not used in this simple demo. */
+	// 				mainQUEUE_RECEIVE_TASK_PRIORITY,/* The priority to assign to the task.  tskIDLE_PRIORITY (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1 is the highest priority. */
+	// 				NULL );							/* Used to obtain a handle to the created task.  Not used in this simple demo, so set to NULL. */
 
 
 	/* Create the queue send task in exactly the same way.  Again, this is
 	described in the comments at the top of the file. */
-	xTaskCreate( 	prvQueueSendTask,
-					"TX",
+	xTaskCreate( 	taskCheckModule1,
+					"taskCheckModule1",
 					configMINIMAL_STACK_SIZE,
 					NULL,
-					mainQUEUE_SEND_TASK_PRIORITY,
+					tskIDLE_PRIORITY + 2,
+					NULL );
+	xTaskCreate( 	taskCheckModule2,
+					"taskCheckModule2",
+					configMINIMAL_STACK_SIZE,
+					NULL,
+					tskIDLE_PRIORITY + 2,
+					NULL );
+	xTaskCreate( 	taskCheckModule3,
+					"taskCheckModule3",
+					configMINIMAL_STACK_SIZE,
+					NULL,
+					tskIDLE_PRIORITY + 2,
+					NULL );
+	xTaskCreate( 	taskCheckDistances,
+					"taskCheckDistances",
+					configMINIMAL_STACK_SIZE,
+					NULL,
+					tskIDLE_PRIORITY + 1,
 					NULL );
 
 
 	/* Create the task that is synchronised with an interrupt using the
 	xEventSemaphore semaphore. */
-	xTaskCreate( 	prvEventSemaphoreTask,
-					"Sem",
-					configMINIMAL_STACK_SIZE,
-					NULL,
-					mainEVENT_SEMAPHORE_TASK_PRIORITY,
-					NULL );
 
 
 	/* Create the software timer as described in the comments at the top of
 	this file.  http://www.freertos.org/FreeRTOS-timers-xTimerCreate.html. */
-	xExampleSoftwareTimer = xTimerCreate("LEDTimer", /* A text name, purely to help debugging. */
-								mainSOFTWARE_TIMER_PERIOD_MS,		/* The timer period, in this case 1000ms (1s). */
-								pdTRUE,								/* This is a periodic timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,						/* The ID is not used, so can be set to anything. */
-								vExampleTimerCallback				/* The callback function that switches the LED off. */
-							);
+	
 
 	/* Start the created timer.  A block time of zero is used as the timer
 	command queue cannot possibly be full here (this is the first timer to
 	be created, and it is not yet running).
 	http://www.freertos.org/FreeRTOS-timers-xTimerStart.html */
-	xTimerStart( xExampleSoftwareTimer, 0 );
+	
 
 	/* Start the tasks and timer running. */
 	vTaskStartScheduler();
@@ -291,167 +293,307 @@ xTimerHandle xExampleSoftwareTimer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static void vExampleTimerCallback( xTimerHandle xTimer )
-{
-	/* The timer has expired.  Count the number of times this happens.  The
-	timer that calls this function is an auto re-load timer, so it will
-	execute periodically. http://www.freertos.org/RTOS-software-timer.html */
-	ulCountOfTimerCallbackExecutions++;
-}
+
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void taskCheckModule1( void *pvParameters )
 {
-portTickType xNextWakeTime;
-const uint32_t ulValueToSend = 100UL;
+
+uint32_t sensor1value = 0;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
 	for( ;; )
 	{
-		/* Place this task in the blocked state until it is time to run again.
-		The block time is specified in ticks, the constant used converts ticks
-		to ms.  While in the Blocked state this task will not consume any CPU
-		time.  http://www.freertos.org/vtaskdelayuntil.html */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
+		xSemaphoreTake( sensor1semaph, portMAX_DELAY );
+		xSemaphoreTake( sensorMutex, portMAX_DELAY );
+		(TIM3)->CNT = 0;
+		TIM_Cmd(TIM3, ENABLE);
+		while(!TIM_GetFlagStatus(TIM3, TIM_FLAG_Update));
+		TIM_Cmd(TIM3, DISABLE);
+		TIM_ClearFlag(TIM3, TIM_FLAG_Update);
+		sensor1value =  (TIM_GetCapture2(TIM3)-TIM_GetCapture1(TIM3))*165/1000;
+		xQueueSend( queueSensor1, &sensor1value, 0 );
+		xSemaphoreGive(sensorMutex);
+	}
+}
 
-		/* Send to the queue - causing the queue receive task to unblock and
-		increment its counter.  0 is used as the block time so the sending
-		operation will not block - it shouldn't need to block as the queue
-		should always be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0 );
+static void taskCheckModule2( void *pvParameters )
+{
+uint32_t sensor2value = 0;
+
+	/* Initialise xNextWakeTime - this only needs to be done once. */
+	for( ;; )
+	{
+		xSemaphoreTake( sensor2semaph, portMAX_DELAY );
+		xSemaphoreTake( sensorMutex, portMAX_DELAY );
+		(TIM4)->CNT = 0;
+		TIM_Cmd(TIM4, ENABLE);
+		while(!TIM_GetFlagStatus(TIM4, TIM_FLAG_Update));
+		TIM_Cmd(TIM4, DISABLE);
+		TIM_ClearFlag(TIM4, TIM_FLAG_Update);
+		sensor1value =  (TIM_GetCapture2(TIM4)-TIM_GetCapture1(TIM4))*165/1000;
+		xQueueSend( queueSensor2, &sensor2value, 0 );
+		xSemaphoreGive(sensorMutex);
+	}
+}
+static void taskCheckModule3( void *pvParameters )
+{
+uint32_t sensor3value = 0;
+
+	/* Initialise xNextWakeTime - this only needs to be done once. */
+	for( ;; )
+	{
+		xSemaphoreTake( sensor3semaph, portMAX_DELAY );
+		xSemaphoreTake( sensorMutex, portMAX_DELAY );
+		(TIM5)->CNT = 0;
+		TIM_Cmd(TIM5, ENABLE);
+		while(!TIM_GetFlagStatus(TIM5, TIM_FLAG_Update));
+		TIM_Cmd(TIM5, DISABLE);
+		TIM_ClearFlag(TIM5, TIM_FLAG_Update);
+		sensor3value =  (TIM_GetCapture2(TIM5)-TIM_GetCapture1(TIM5))*165/1000;
+		xQueueSend( queueSensor3, &sensor3value, 0 );
+		xSemaphoreGive(sensorMutex);
 	}
 }
 /*-----------------------------------------------------------*/
+static void processDistance( uint32_t distance, int sensor){
+	uint32_t buz_pin;
+	switch (sensor){
+		case 1:
+			buz_pin = GPIO_Pin_3;
+			break;
+		case 2:
+			buz_pin = GPIO_Pin_4;
+			break;
+		case 3:
+			buz_pin = GPIO_Pin_5;
+			break;
+		default:
+			return;
+	}	
+	if (distance>3000){
+		GPIO_SetBits(GPIOB, buz_pin);
+		vTaskDelay(100/portTICK_RATE_MS);
+		GPIO_ResetBits(GPIOB, buz_pin);
+	}
+	else if (distance>2000){
+		GPIO_SetBits(GPIOB, buz_pin);
+		vTaskDelay(200/portTICK_RATE_MS);
+		GPIO_ResetBits(GPIOB, buz_pin);
+	}
+	else if (distance>1000){
+		GPIO_SetBits(GPIOB, buz_pin);
+		vTaskDelay(400/portTICK_RATE_MS);
+		GPIO_ResetBits(GPIOB, buz_pin);
+	}
+	else if (distance>500){
+		GPIO_SetBits(GPIOB, buz_pin);
+		vTaskDelay(800/portTICK_RATE_MS);
+		GPIO_ResetBits(GPIOB, buz_pin);
+	}
+	else if (distance>250){
+		GPIO_SetBits(GPIOB, buz_pin);
+		vTaskDelay(1600/portTICK_RATE_MS);
+		GPIO_ResetBits(GPIOB, buz_pin);
+	}
+	
+}
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void taskCheckDistances( void *pvParameters )
 {
-uint32_t ulReceivedValue;
-
+uint32_t S1ReceivedValue;
+uint32_t S2ReceivedValue;
+uint32_t S3ReceivedValue;
+uint32_t totalDistance=0;
+uint32_t nextDelay;
+uint8_t mode = 0;
 	for( ;; )
 	{
 		/* Wait until something arrives in the queue - this task will block
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
 		FreeRTOSConfig.h.  http://www.freertos.org/a00118.html */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+		xQueueReceive(queueSensor1, &S1ReceivedValue, portMAX_DELAY );
+		processDistance(S1ReceivedValue,1);
+		xQueueReceive(queueSensor2, &S2ReceivedValue, portMAX_DELAY );
+		processDistance(S2ReceivedValue,2);
+		xQueueReceive(queueSensor3, &S3ReceivedValue, portMAX_DELAY );
+		processDistance(S3ReceivedValue,3);
+
+		if (S1ReceivedValue>0){
+			totalDistance =+ S1ReceivedValue;
+		}
+		if (S2ReceivedValue>0){
+			totalDistance =+ S2ReceivedValue;
+		}
+		if (S3ReceivedValue>0){
+			totalDistance =+ S3ReceivedValue;
+		}
+
+		if (totalDistance<500){
+			nextDelay=5;
+		}
+		else if (totalDistance<1000){
+			nextDelay = 50;
+		}
+		else if (totalDistance<2000){ 
+			nextDelay = 100;
+		}
+		else {
+			nextDelay = 500;
+		}
+		vTaskDelay(nextDelay/portTICK_RATE_MS);
+		totalDistance = 0;
 
 		/*  To get here something must have been received from the queue, but
 		is it the expected value?  If it is, increment the counter. */
-		if( ulReceivedValue == 100UL )
-		{
-			/* Count the number of items that have been received correctly. */
-			ulCountOfItemsReceivedOnQueue++;
-		}
+	
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvEventSemaphoreTask( void *pvParameters )
-{
-	for( ;; )
-	{
-		/* Block until the semaphore is 'given'. */
-		xSemaphoreTake( xEventSemaphore, portMAX_DELAY );
-
-		/* Count the number of times the semaphore is received. */
-		ulCountOfReceivedSemaphores++;
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationTickHook( void )
-{
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-static uint32_t ulCount = 0;
-
-	/* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to
-	1 in FreeRTOSConfig.h.
-
-	"Give" the semaphore on every 500th tick interrupt. */
-	ulCount++;
-	if( ulCount >= 500UL )
-	{
-		/* This function is called from an interrupt context (the RTOS tick
-		interrupt),	so only ISR safe API functions can be used (those that end
-		in "FromISR()".
-
-		xHigherPriorityTaskWoken was initialised to pdFALSE, and will be set to
-		pdTRUE by xSemaphoreGiveFromISR() if giving the semaphore unblocked a
-		task that has equal or higher priority than the interrupted task.
-		http://www.freertos.org/a00124.html */
-		xSemaphoreGiveFromISR( xEventSemaphore, &xHigherPriorityTaskWoken );
-		ulCount = 0UL;
-	}
-
-	/* If xHigherPriorityTaskWoken is pdTRUE then a context switch should
-	normally be performed before leaving the interrupt (because during the
-	execution of the interrupt a task of equal or higher priority than the
-	running task was unblocked).  The syntax required to context switch from
-	an interrupt is port dependent, so check the documentation of the port you
-	are using.  http://www.freertos.org/a00090.html
-
-	In this case, the function is running in the context of the tick interrupt,
-	which will automatically check for the higher priority task to run anyway,
-	so no further action is required. */
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationMallocFailedHook( void )
-{
-	/* The malloc failed hook is enabled by setting
-	configUSE_MALLOC_FAILED_HOOK to 1 in FreeRTOSConfig.h.
-
-	Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software 
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
-{
-	( void ) pcTaskName;
-	( void ) pxTask;
-
-	/* Run time stack overflow checking is performed if
-	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected.  pxCurrentTCB can be
-	inspected in the debugger if the task name passed into this function is
-	corrupt. */
-	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIdleHook( void )
-{
-volatile size_t xFreeStackSpace;
-
-	/* The idle task hook is enabled by setting configUSE_IDLE_HOOK to 1 in
-	FreeRTOSConfig.h.
-
-	This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amount of FreeRTOS heap that
-	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
-
-	if( xFreeStackSpace > 100 )
-	{
-		/* By now, the kernel has allocated everything it is going to, so
-		if there is a lot of heap remaining unallocated then
-		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
-		reduced accordingly. */
-	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvSetupHardware( void )
+static void initializeProgram( void )
 {
 	/* Ensure all priority bits are assigned as preemption priority bits.
 	http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	NVIC_SetPriorityGrouping( 0 );
+    //Initialize Clocks
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+	//Initialize Pins
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	RCC_ClocksTypeDef RCC_ClocksStatus;
+	RCC_GetClocksFreq(&RCC_ClocksStatus);
+	uint16_t prescaler = RCC_ClocksStatus.SYSCLK_Frequency / 1000000 - 1; //1 tick = 1us (1 tick = 0.165mm resolution)
+	//TIM3
+		TIM_DeInit(TIM3);
+		TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+		TIM_TimeBaseInitStruct.TIM_Prescaler = prescaler;
+		TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
+		TIM_TimeBaseInitStruct.TIM_Period = 0xFFFF;
+		TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
+		TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStruct);
+
+		TIM_OCInitTypeDef TIM_OCInitStruct;
+		TIM_OCStructInit(&TIM_OCInitStruct);
+		TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;
+		TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;
+		TIM_OCInitStruct.TIM_Pulse = 15; //us
+		TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
+		TIM_OC3Init(TIM3, &TIM_OCInitStruct);
+
+		TIM_ICInitTypeDef TIM_ICInitStruct;
+		TIM_ICInitStruct.TIM_Channel = TIM_Channel_1;
+		TIM_ICInitStruct.TIM_ICPolarity = TIM_ICPolarity_Rising;
+		TIM_ICInitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
+		TIM_ICInitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+		TIM_ICInitStruct.TIM_ICFilter = 0;
+
+		TIM_PWMIConfig(TIM3, &TIM_ICInitStruct);
+		TIM_SelectInputTrigger(TIM3, TIM_TS_TI1FP1);
+		TIM_SelectMasterSlaveMode(TIM3, TIM_MasterSlaveMode_Enable);
+
+		TIM_CtrlPWMOutputs(TIM3, ENABLE);
+
+		TIM_ClearFlag(TIM3, TIM_FLAG_Update);
+	//TIM4
+		TIM_DeInit(TIM4);
+		TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+		TIM_TimeBaseInitStruct.TIM_Prescaler = prescaler;
+		TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
+		TIM_TimeBaseInitStruct.TIM_Period = 0xFFFF;
+		TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
+		TIM_TimeBaseInit(TIM4, &TIM_TimeBaseInitStruct);
+
+		TIM_OCInitTypeDef TIM_OCInitStruct;
+		TIM_OCStructInit(&TIM_OCInitStruct);
+		TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;
+		TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;
+		TIM_OCInitStruct.TIM_Pulse = 15; //us
+		TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
+		TIM_OC3Init(TIM4, &TIM_OCInitStruct);
+
+		TIM_ICInitTypeDef TIM_ICInitStruct;
+		TIM_ICInitStruct.TIM_Channel = TIM_Channel_1;
+		TIM_ICInitStruct.TIM_ICPolarity = TIM_ICPolarity_Rising;
+		TIM_ICInitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
+		TIM_ICInitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+		TIM_ICInitStruct.TIM_ICFilter = 0;
+
+		TIM_PWMIConfig(TIM4, &TIM_ICInitStruct);
+		TIM_SelectInputTrigger(TIM4, TIM_TS_TI1FP1);
+		TIM_SelectMasterSlaveMode(TIM4, TIM_MasterSlaveMode_Enable);
+
+		TIM_CtrlPWMOutputs(TIM4, ENABLE);
+
+		TIM_ClearFlag(TIM4, TIM_FLAG_Update);
+	//TIM5
+		TIM_DeInit(TIM5);
+		TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+		TIM_TimeBaseInitStruct.TIM_Prescaler = prescaler;
+		TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
+		TIM_TimeBaseInitStruct.TIM_Period = 0xFFFF;
+		TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
+		TIM_TimeBaseInit(TIM5, &TIM_TimeBaseInitStruct);
+
+		TIM_OCInitTypeDef TIM_OCInitStruct;
+		TIM_OCStructInit(&TIM_OCInitStruct);
+		TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;
+		TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;
+		TIM_OCInitStruct.TIM_Pulse = 15; //us
+		TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
+		TIM_OC3Init(TIM5, &TIM_OCInitStruct);
+
+		TIM_ICInitTypeDef TIM_ICInitStruct;
+		TIM_ICInitStruct.TIM_Channel = TIM_Channel_1;
+		TIM_ICInitStruct.TIM_ICPolarity = TIM_ICPolarity_Rising;
+		TIM_ICInitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
+		TIM_ICInitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+		TIM_ICInitStruct.TIM_ICFilter = 0;
+
+		TIM_PWMIConfig(TIM5, &TIM_ICInitStruct);
+		TIM_SelectInputTrigger(TIM5, TIM_TS_TI1FP1);
+		TIM_SelectMasterSlaveMode(TIM5, TIM_MasterSlaveMode_Enable);
+
+		TIM_CtrlPWMOutputs(TIM5, ENABLE);
+
+		TIM_ClearFlag(TIM5, TIM_FLAG_Update);
+		
+
 
 	/* TODO: Setup the clocks, etc. here, if they were not configured before
 	main() was called. */
